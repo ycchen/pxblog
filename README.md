@@ -83,4 +83,47 @@ $ mix test test/models/user_test.exs
 > alias Pxblog.Repo
 > alias Pxblog.User
 > Repo.get_by(User, username: "ryan")
-[debug] SELECT u0."id", u0."username", u0."email", u0."password_digest", u0."inserted_at", u0."updated_at" FROM "users" AS u0 WHERE (u0."username" = $1) ["ryan"] OK query=118.1ms queue=20.7ms
+
+----- Part 2 Authorization
+> elixir -v
+Elixir 1.2.5
+> mix phoenix.new -v
+Phoenix v1.1.4
+
+----- Adding our migration
+> mix ecto.gen.migration add_user_id_to_posts
+* creating priv/repo/migrations
+* creating priv/repo/migrations/20160625184953_add_user_id_to_posts.exs
+> mix ecto.migrate
+
+----- Associating posts with users
+
+-- phoenix routes
+> mix phoenix.routes
+
+-- start iex -S mix
+iex -S mix
+import Ecto.Query
+alias Pxblog.User
+alias Pxblog.Post
+alias Pxblog.Repo
+import Ecto.model
+import Ecto
+
+-- find user by id
+>user = Repo.get(User, 4)
+
+-- find user by attributes
+>user = Repo.get_by(User, username: "ryan")
+
+-- Ecto's build_assoc function
+import Ecto
+import Ecto.Query
+alias Pxblog.Repo
+alias Pxblog.User
+alias Pxblog.Post
+user = Repo.get(User, 1)
+post = build_assoc(user, :posts, %{title: "Test Title", body: "Test Body"})
+Repo.insert(post)
+posts = Repo.all(from p in Post, preload: [:user])
+post = List.first(posts)

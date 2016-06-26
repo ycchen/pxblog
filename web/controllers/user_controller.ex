@@ -4,6 +4,7 @@ defmodule Pxblog.UserController do
   alias Pxblog.User
 
   plug :scrub_params, "user" when action in [:create, :update]
+  # plug :authorize_user when action in [:new, :create, :edit, :uupdate, :delete]
 
   def index(conn, _params) do
     users = Repo.all(User)
@@ -64,4 +65,16 @@ defmodule Pxblog.UserController do
     |> put_flash(:info, "User deleted successfully.")
     |> redirect(to: user_path(conn, :index))
   end
+
+  # defp authorize_user(conn, _opts) do
+  #   user = get_session(conn, :current_user)
+  #   if user && Integer.to_string(user.id) == conn.params["user_id"] do
+  #     conn
+  #   else
+  #     conn
+  #     |> put_flash(:error, "You are not authorized to modify that post!")
+  #     |> redirect(to: page_path(conn, :index))
+  #     |> halt()
+  #   end
+  # end
 end
