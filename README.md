@@ -127,3 +127,56 @@ post = build_assoc(user, :posts, %{title: "Test Title", body: "Test Body"})
 Repo.insert(post)
 posts = Repo.all(from p in Post, preload: [:user])
 post = List.first(posts)
+
+
+----- Debugging Phoenix with IEx.pry
+https://medium.com/@diamondgfx/debugging-phoenix-with-iex-pry-5417256e1d11#.tkgr2wprg
+** using IEx.pry
+---- Debugging a Controller
+Add following line in web/controllers/user_controller.ex
+require IEx
+Add following line in index method in web/controllers/user_controller.ex
+Then switch to terminal and issue following command (make sure no other session of phoenix.server is running on the same application)
+>iex -S mix phoenix.server
+
+http://blog.plataformatec.com.br/2016/04/debugging-techniques-in-elixir-lang/
+http://landonmarder.com/posts/2016/01/08/iex-in-phoenix-tests/
+-- First, for the file that you want to throw your IEx.pry into, add require IEx under your defmoudle line
+defmodule Fishbowl.User do
+  require IEx
+  ...
+end
+-- Then, where you want to stop, enter IEx.pry
+def changeset(model, params \\ :empty) do
+  IEx.pry
+  model
+  ...
+
+Run your test suite by running $ iex -S mix test --trace in your project directory
+
+iex -S will open up Elixir's interactive shell so that your tests will stop when it hits an IEx.pry
+
+--trace will prevent your Elixir interactive shell from timing out after 60 seconds.
+
+----- Part 3 Adding Roles to models
+
+#### Creating Roles
+> mix phoenix.gen.model Role roles name:string admin:boolean
+> mix ecto.migrate
+
+##### Adding Roles Associations
+-- web/models/user.ex one user has one role, and each role has many users
+-- web/models/role.ex has many users
+-- run mix test (expecting many failed)
+-- generate migration file to add role_id to users table
+> mix ecto.gen.migration add_role_id_to_users
+alter table(:users) do
+  add :role_id, references(:roles)
+end
+
+-- make change to models/user.ex to ensure role_id is one of the required_fields
+The changed will result a lot of failures when run test again
+#### Creating a Test Helper
+create test/support/test_helper.ex
+
+#### Fixing Our tests

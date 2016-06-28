@@ -1,13 +1,14 @@
+
 defmodule Pxblog.UserController do
   use Pxblog.Web, :controller
-
   alias Pxblog.User
-
+  require IEx
   plug :scrub_params, "user" when action in [:create, :update]
   # plug :authorize_user when action in [:new, :create, :edit, :uupdate, :delete]
 
   def index(conn, _params) do
     users = Repo.all(User)
+    # IEx.pry
     render(conn, "index.html", users: users)
   end
 
