@@ -10,6 +10,7 @@ defmodule Pxblog.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      aliases: aliases,
+     test_coverage: [tool: Coverex.Task, coveralls: true],
      deps: deps]
   end
 
@@ -37,7 +38,8 @@ defmodule Pxblog.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
-     {:comeonin, "~> 2.1"}]
+     {:comeonin, "~> 2.1"},
+     {:coverex, "~> 1.4.9", only: :test}]
   end
 
   # Aliases are shortcut or tasks specific to the current project.

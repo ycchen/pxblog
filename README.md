@@ -180,3 +180,44 @@ The changed will result a lot of failures when run test again
 create test/support/test_helper.ex
 
 #### Fixing Our tests
+
+#### Creating an Admin Seed
+-- priv/repo/seeds.exs
+alias Pxblog.Repo
+alias Pxblog.Role
+alias Pxblog.User
+role = %Role{}
+  |> Role.changeset(%{name: "Admin Role", admin: true})
+  |> Repo.insert!
+admin = %User{}
+  |> User.changeset(%{username: "admin", email: "admin@test.com", password: "test", password_confirmation: "test", role_id: role.id})
+  |> Repo.insert!
+
+> mix run priv/repo/seeds.exs
+
+#### Phoenix ecosystem for Rails developers
+http://www.kerrybuckley.org/category/software/
+
+---- Add Test coverage package (Ruby equivalent: Simplecov)
+mix espec --cover
+
+#### Creating a Role Checker Helper: to check if user is an admin?
+
+#### view helper function
+----
+def roles_for_select(roles) do
+  roles
+  |> Enum.map(&["#{&1.name}": &1.id])
+  |> List.flatten
+end
+
+---- &/&1 is shorthand syntax for an anonymous function
+---- without pipe operation and the shorthand
+Enum.map(roles, fn role -> ["#{role.name}": role.id] end)
+
+role = %Role{}
+  |> Role.changeset(%{name: "Admin Role", admin: true})
+  |> Repo.insert!
+role = %Role{}
+  |> Role.changeset(%{name: "User Role", admin: false})
+  |> Repo.insert!
