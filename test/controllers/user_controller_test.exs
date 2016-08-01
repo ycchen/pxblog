@@ -2,18 +2,23 @@ defmodule Pxblog.UserControllerTest do
   use Pxblog.ConnCase
 
   alias Pxblog.User
-  alias Pxblog.TestHelper
+  # alias Pxblog.TestHelper
+  alias Pxblog.Factory
+
   @valid_create_attrs %{email: "test@test.com", password: "test1234", password_confirmation: "test1234", username: "testuser"}
   @valid_attrs %{email: "test@test.com", username: "testuser"}
   @invalid_attrs %{}
 
   setup do
-    {:ok, user_role}     = TestHelper.create_role(%{name: "user", admin: false})
-    {:ok, nonadmin_user} = TestHelper.create_user(user_role, %{email: "nonadmin@test.com", username: "nonadmin", password: "test", password_confirmation: "test"})
+    # {:ok, user_role}     = TestHelper.create_role(%{name: "user", admin: false})
+    user_role = Factory.create(:role)
+    # {:ok, nonadmin_user} = TestHelper.create_user(user_role, %{email: "nonadmin@test.com", username: "nonadmin", password: "test", password_confirmation: "test"})
+    nonadmin_user = Factory.create(:user, role: user_role)
 
-    {:ok, admin_role}    = TestHelper.create_role(%{name: "admin", admin: true})
-    {:ok, admin_user}    = TestHelper.create_user(admin_role, %{email: "admin@test.com", username: "admin", password: "test", password_confirmation: "test"})
-
+    # {:ok, admin_role}    = TestHelper.create_role(%{name: "admin", admin: true})
+    admin_role = Factory.create(:role, admin: true)
+    # {:ok, admin_user}    = TestHelper.create_user(admin_role, %{email: "admin@test.com", username: "admin", password: "test", password_confirmation: "test"})
+    admin_user = Factory.create(:user, role: admin_role)
     conn = conn()
     {:ok, conn: conn, admin_role: admin_role, user_role: user_role, nonadmin_user: nonadmin_user, admin_user: admin_user}
   end
@@ -109,14 +114,15 @@ defmodule Pxblog.UserControllerTest do
 
   @tag admin: true
   test "does not update chosen resource and renders errors when data is invalid", %{conn: conn, nonadmin_user: nonadmin_user} do
-    conn = login_user(conn, nonadmin_user)
-    conn = put conn, user_path(conn, :update, nonadmin_user), user: @invalid_attrs
-    assert html_response(conn, 200) =~ "Edit user"
+      conn = login_user(conn, nonadmin_user)
+      conn = put conn, user_path(conn, :update, nonadmin_user), user: @invalid_attrs
+      assert html_response(conn, 200) =~ "Edit user"
   end
 
   @tag admin: true
   test "deletes chosen resource when logged in as that user", %{conn: conn, user_role: user_role} do
-    {:ok, user} = TestHelper.create_user(user_role, @valid_create_attrs)
+    # {:ok, user} = TestHelper.create_user(user_role, @valid_create_attrs)
+    user = Factory.create(:user)
     conn =
       login_user(conn, user)
       |> delete(user_path(conn, :delete, user))
@@ -126,7 +132,8 @@ defmodule Pxblog.UserControllerTest do
 
   @tag admin: true
   test "deletes chosen resource when logged in as an admin", %{conn: conn, user_role: user_role, admin_user: admin_user} do
-    {:ok, user} = TestHelper.create_user(user_role, @valid_create_attrs)
+    # {:ok, user} = TestHelper.create_user(user_role, @valid_create_attrs)
+    user = Factory.create(:user)
     conn =
       login_user(conn, admin_user)
       |> delete(user_path(conn, :delete, user))
@@ -136,7 +143,8 @@ defmodule Pxblog.UserControllerTest do
 
   @tag admin: true
   test "redirects away from deleting chosen resource when logged in as a different user", %{conn: conn, user_role: user_role, nonadmin_user: nonadmin_user} do
-    {:ok, user} = TestHelper.create_user(user_role, @valid_create_attrs)
+    # {:ok, user} = TestHelper.create_user(user_role, @valid_create_attrs)
+    user = Factory.create(:user)
     conn =
       login_user(conn, nonadmin_user)
       |> delete(user_path(conn, :delete, user))

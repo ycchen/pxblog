@@ -19,9 +19,12 @@ defmodule Pxblog.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Pxblog, []},
-     applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :comeonin]]
+     applications: app_list(Mix.env)]
   end
+
+  defp app_list(:test), do: [:ex_machina | app_list]
+  defp app_list(_), do: app_list
+  defp app_list, do: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,:phoenix_ecto, :postgrex, :comeonin]
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "web", "test/support"]
@@ -39,7 +42,8 @@ defmodule Pxblog.Mixfile do
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
      {:comeonin, "~> 2.1"},
-     {:coverex, "~> 1.4.9", only: :test}]
+     {:coverex, "~> 1.4.9", only: :test},
+     {:ex_machina, "~> 0.6"}]
   end
 
   # Aliases are shortcut or tasks specific to the current project.

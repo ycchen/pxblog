@@ -221,3 +221,15 @@ role = %Role{}
 role = %Role{}
   |> Role.changeset(%{name: "User Role", admin: false})
   |> Repo.insert!
+
+----- Part 5 Adding ExMachina
+$ mix do deps.get, compile
+
+#### Adding first factory: Roles
+-- test/support/factory.ex
+
+&"Test Role #{&1}" ==
+
+fn x->
+  "Test Role #{x}"
+end
