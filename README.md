@@ -233,3 +233,14 @@ $ mix do deps.get, compile
 fn x->
   "Test Role #{x}"
 end
+
+$ mix test # to test all tests
+
+----- Part 6 Markdown support
+adding earmark to do Markdown support
+{:earmark, "~> 0.2.1"}
+
+$ mix do deps.get, compile
+
+#### Updating our views
+--web/views/post_view.ex

@@ -43,7 +43,8 @@ defmodule Pxblog.Mixfile do
      {:cowboy, "~> 1.0"},
      {:comeonin, "~> 2.1"},
      {:coverex, "~> 1.4.9", only: :test},
-     {:ex_machina, "~> 0.6"}]
+     {:ex_machina, "~> 0.6"},
+     {:earmark, "~> 0.2.1"}]
   end
 
   # Aliases are shortcut or tasks specific to the current project.
