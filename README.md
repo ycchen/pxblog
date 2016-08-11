@@ -244,3 +244,18 @@ $ mix do deps.get, compile
 
 #### Updating our views
 --web/views/post_view.ex
+
+---- Part 7 Adding Comments support
+
+#### Adding our comments model
+
+$ mix phoenix.gen.model Comment comments author:string body:text approved:boolean post_id:references:posts
+
+$ mix ecto.migrate
+
+#### Adding comments controller and view
+
+#### Adding a comments display to our posts
+
+#### Adding controller tests for comments
+create test/controllers/comment_controller_test.exs

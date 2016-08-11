@@ -22,6 +22,9 @@ defmodule Pxblog.Router do
     end
 
     resources "/sessions", SessionController, only: [:new, :create, :delete]
+    resources "/posts", PostController, only: [] do
+      resources "/comments", CommentController, only: [:create, :delete, :update] 
+    end
   end
 
   # Other scopes may use custom stacks.

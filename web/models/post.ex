@@ -6,6 +6,7 @@ defmodule Pxblog.Post do
     field :body, :string
 
     belongs_to :user, Pxblog.User
+    has_many :comments, Pxblog.Comment
     timestamps
   end
 
@@ -34,6 +35,6 @@ defmodule Pxblog.Post do
   end
 
   defp strip_unsafe_body(model, _) do
-    model 
+    model
   end
 end
